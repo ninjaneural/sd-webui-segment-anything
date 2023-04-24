@@ -28,16 +28,45 @@ function sendToInpaintMask(chosen_mask, dilation_checkbox) {
     if (dilation_checkbox == true) {
         gallery = gradioApp().querySelector('#' + samTabPrefix() + 'expanded_gallery');
         images = gallery.querySelectorAll('img');
-        maskImage = images[parseInt(chosen_mask)];
+        if (images.length) {
+            maskImage = images[parseInt(chosen_mask)];
+        }
     } else {
         gallery = gradioApp().querySelector('#' + samTabPrefix() + 'output_gallery');
         images = gallery.querySelectorAll('img');
-        maskImage = images[3 + parseInt(chosen_mask)];
+        if (images.length) {
+            maskImage = images[3 + parseInt(chosen_mask)];
+        }
     }
     if (maskImage) {
         const maskCanvas = gradioApp().querySelector('canvas[key="mask"]');
         const maskContext = maskCanvas.getContext('2d')
         maskContext.drawImage(maskImage, 0, 0);
+
+        const tempCanvas = gradioApp().querySelector('canvas[key="temp"]');
+        const tempContext = tempCanvas.getContext('2d')
+        tempContext.drawImage(maskImage, 0, 0);
+        var imgData = tempContext.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        // invert colors
+        var i;
+        for (i = 0; i < imgData.data.length; i += 4) {
+            imgData.data[i] = 255 - imgData.data[i];
+            imgData.data[i + 1] = 255 - imgData.data[i + 1];
+            imgData.data[i + 2] = 255 - imgData.data[i + 2];
+            imgData.data[i + 3] = 255 - imgData.data[i + 1];
+        }
+        tempContext.putImageData(imgData, 0, 0);
+
+        function triggerMouseEvent(node, eventType) {
+            let evt = new MouseEvent(eventType, {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+            });
+            node.dispatchEvent(evt);
+        }
+        triggerMouseEvent(gradioApp().querySelector('canvas[key="interface"]'), 'mousedown');
+        triggerMouseEvent(gradioApp().querySelector('canvas[key="interface"]'), 'mousedup');
     }
 }
 
