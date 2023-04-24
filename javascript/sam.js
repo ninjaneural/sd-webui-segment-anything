@@ -30,6 +30,8 @@ function samTabPrefix() {
                 return "txt2img_sam_"
             } else if (buttons[1].className.includes("selected")) {
                 return "img2img_sam_"
+            } else { // gradio old version
+                return "img2img_sam_"
             }
         }
     }
@@ -86,7 +88,7 @@ function samRemoveDots() {
     if (sam_image) {
         ["." + samTabPrefix() + "positive", "." + samTabPrefix() + "negative"].forEach(cls => {
             const dots = sam_image.querySelectorAll(cls);
-    
+
             dots.forEach(dot => {
                 dot.remove();
             });
