@@ -29,10 +29,10 @@ function sendToInpaintMask(chosen_mask, dilation_checkbox) {
         gallery = gradioApp().querySelector('#' + samTabPrefix() + 'expanded_gallery');
         images = gallery.querySelectorAll('img');
         if (images.length) {
-            maskImage = images[parseInt(chosen_mask)];
+            maskImage = images[1];
         }
     } else {
-        gallery = gradioApp().querySelector('#' + samTabPrefix() + 'output_gallery');
+        gallery = gradioApp().querySelector('#img2img_sam_output_gallery');
         images = gallery.querySelectorAll('img');
         if (images.length) {
             maskImage = images[3 + parseInt(chosen_mask)];
@@ -57,16 +57,17 @@ function sendToInpaintMask(chosen_mask, dilation_checkbox) {
         }
         tempContext.putImageData(imgData, 0, 0);
 
-        function triggerMouseEvent(node, eventType) {
-            let evt = new MouseEvent(eventType, {
+        function triggerEvent(node, eventType) {
+            let evt = new Event(eventType, {
                 bubbles: true,
                 cancelable: true,
                 view: window,
             });
             node.dispatchEvent(evt);
         }
-        triggerMouseEvent(gradioApp().querySelector('canvas[key="interface"]'), 'mousedown');
-        triggerMouseEvent(gradioApp().querySelector('canvas[key="interface"]'), 'mousedup');
+        const interfaceCanvas = gradioApp().querySelector('canvas[key="interface"]');
+        triggerEvent(interfaceCanvas, 'touchstart');
+        triggerEvent(interfaceCanvas, 'touchend');
     }
 }
 
