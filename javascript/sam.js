@@ -27,11 +27,11 @@ function sendToInpaintMask(chosen_mask, dilation_checkbox) {
     let maskImage;
     if (dilation_checkbox == true) {
         gallery = gradioApp().querySelector('#' + samTabPrefix() + 'expanded_gallery');
-        images = gallery.querySelectorAll('.gallery-item img');
+        images = gallery.querySelectorAll('img');
         maskImage = images[parseInt(chosen_mask)];
     } else {
         gallery = gradioApp().querySelector('#' + samTabPrefix() + 'output_gallery');
-        images = gallery.querySelectorAll('.gallery-item img');
+        images = gallery.querySelectorAll('img');
         maskImage = images[3 + parseInt(chosen_mask)];
     }
     if (maskImage) {
