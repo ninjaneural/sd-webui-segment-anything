@@ -373,7 +373,7 @@ class Script(scripts.Script):
                                     inputs=[input_image, dino_model_name, text_prompt, box_threshold],
                                     outputs=[dino_preview_boxes, dino_preview_boxes_selection, dino_preview_result])
 
-                        mask_image = gr.Gallery(label='Segment Anything Output', show_label=False).style(grid=3)
+                        mask_image = gr.Gallery(label='Segment Anything Output', elem_id=f"{tab_prefix}output_gallery", show_label=False).style(grid=3)
 
                         run_button = gr.Button(value="Preview Segmentation", elem_id=f"{tab_prefix}run_button")
                         run_result = gr.Text(value="", show_label=False)
@@ -392,7 +392,7 @@ class Script(scripts.Script):
                         dilation_checkbox = gr.Checkbox(value=False, label="Expand Mask")
                         with gr.Column(visible=False) as dilation_column:
                             dilation_amt = gr.Slider(minimum=0, maximum=100, default=0, value=0, label="Specify the amount that you wish to expand the mask by (recommend 30)", elem_id="dilation_amt")
-                            expanded_mask_image = gr.Gallery(label="Expanded Mask").style(grid=3)
+                            expanded_mask_image = gr.Gallery(label="Expanded Mask", elem_id=f"{tab_prefix}expanded_gallery").style(grid=3)
                             update_mask_button = gr.Button(value="Update Mask")
                         
                         # switch = gr.Button(value="Switch to Inpaint Upload")
@@ -452,6 +452,8 @@ class Script(scripts.Script):
                 switch = gr.Button(value="Switch to Inpaint Upload")
                 unload = gr.Button(value="Unload all models from memory")
 
+                sendtomask = gr.Button(value="Send to Inpaint Mask")
+
             run_button.click(
                 fn=sam_predict,
                 _js='submit_sam',
@@ -473,6 +475,13 @@ class Script(scripts.Script):
                 outputs=[dino_preview],
                 show_progress=False)
             
+            sendtomask.click(
+                fn=None,
+                _js="sendToInpaintMask",
+                inputs=[chosen_mask,dilation_checkbox],
+                outputs=None
+            )
+
             switch.click(
                 fn=lambda _: None,
                 _js="switchToInpaintUpload",

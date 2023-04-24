@@ -21,6 +21,26 @@ function switchToInpaintUpload() {
     return arguments;
 }
 
+function sendToInpaintMask(chosen_mask, dilation_checkbox) {
+    let gallery;
+    let images;
+    let maskImage;
+    if (dilation_checkbox == true) {
+        gallery = gradioApp().querySelector('#' + samTabPrefix() + 'expanded_gallery');
+        images = gallery.querySelectorAll('.gallery-item img');
+        maskImage = images[parseInt(chosen_mask)];
+    } else {
+        gallery = gradioApp().querySelector('#' + samTabPrefix() + 'output_gallery');
+        images = gallery.querySelectorAll('.gallery-item img');
+        maskImage = images[3 + parseInt(chosen_mask)];
+    }
+    if (maskImage) {
+        const maskCanvas = gradioApp().querySelector('canvas[key="mask"]');
+        const maskContext = maskCanvas.getContext('2d')
+        maskContext.drawImage(maskImage, 0, 0);
+    }
+}
+
 function samTabPrefix() {
     const tabs = gradioApp().querySelector('#tabs');
     if (tabs) {
