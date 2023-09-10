@@ -294,7 +294,10 @@ def dino_batch_process(
                 output_image.save(os.path.join(dino_batch_dest_dir, f"{filename}_{idx}_output{ext}"))
             if dino_batch_save_mask:
                 output_mask = Image.fromarray(merged_mask)
-                output_mask.save(os.path.join(dino_batch_dest_dir, f"{filename}_{idx}_mask{ext}"))
+                if dino_batch_output_per_image==1:
+                    output_mask.save(os.path.join(dino_batch_dest_dir, f"{filename}{ext}"))
+                else:
+                    output_mask.save(os.path.join(dino_batch_dest_dir, f"{filename}_{idx}_mask{ext}"))
             if dino_batch_save_image_with_mask:
                 output_blend = Image.fromarray(blended_image)
                 output_blend.save(os.path.join(dino_batch_dest_dir, f"{filename}_{idx}_blend{ext}"))
