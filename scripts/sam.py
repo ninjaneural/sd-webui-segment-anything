@@ -294,7 +294,7 @@ def dino_batch_process(
                 output_image.save(os.path.join(dino_batch_dest_dir, f"{filename}_{idx}_output{ext}"))
             if dino_batch_save_mask:
                 output_mask = Image.fromarray(merged_mask)
-                if dino_batch_output_per_image==1:
+                if idx==0:
                     output_mask.save(os.path.join(dino_batch_dest_dir, f"{filename}{ext}"))
                 else:
                     output_mask.save(os.path.join(dino_batch_dest_dir, f"{filename}_{idx}_mask{ext}"))
