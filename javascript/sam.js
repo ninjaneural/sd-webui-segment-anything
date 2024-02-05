@@ -42,13 +42,21 @@ function sendToInpaintMask(chosen_mask, dilation_checkbox) {
         const maskCanvas = gradioApp().querySelector('canvas[key="mask"]');
         const maskContext = maskCanvas.getContext('2d')
         maskContext.drawImage(maskImage, 0, 0);
+        var imgData = maskContext.getImageData(0, 0, maskCanvas.width, maskCanvas.height);
+        var i;
+        for (i = 0; i < imgData.data.length; i += 4) {
+            imgData.data[i] = imgData.data[i];
+            imgData.data[i + 1] = imgData.data[i];
+            imgData.data[i + 2] = imgData.data[i];
+            imgData.data[i + 3] = imgData.data[i];
+        }
+        maskContext.putImageData(imgData, 0, 0);
 
         const tempCanvas = gradioApp().querySelector('canvas[key="temp"]');
         const tempContext = tempCanvas.getContext('2d')
         tempContext.drawImage(maskImage, 0, 0);
-        var imgData = tempContext.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        imgData = tempContext.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
         // invert colors
-        var i;
         for (i = 0; i < imgData.data.length; i += 4) {
             imgData.data[i] = 255 - imgData.data[i];
             imgData.data[i + 1] = 255 - imgData.data[i + 1];
